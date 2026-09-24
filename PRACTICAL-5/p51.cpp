@@ -33,38 +33,36 @@ public:
     void displayList() {
       if(head == nullptr){
         cout << "List is empty.\n";
+        return;
       }
       Node* temp = head;
       cout << "START ";
       while(temp != nullptr) {
-        cout << temp << "->";
+        cout << temp->data << " -> ";
         temp = temp->next;
       }
-      cout << " END";
+      cout << "END\n";
     }
 
     void insertFirst(string val) {
-      Node* node = head;
+      Node* node = new Node(val);
       if(head == nullptr){
         head = node;
         tail = node;
-        return;
       }
       else {
         node->next = head;
+        head->prev = node;
         head = node;
-        node->prev = nullptr;
       }
       count++;
       displayList();
     }
 
     void insertLast(string val) {
-      Node* node = tail;
+      Node* node = new Node(val);
       if(tail == nullptr) {
-        node = tail;
-        node = head;
-        return;
+        head = tail = node;
       }
       else {
         tail->next = node;
@@ -75,7 +73,7 @@ public:
       displayList();
     }
 
-    void insert(string target,string val) {
+    void insert(string target, string val) {
       Node* curr = head;
       while(curr != nullptr && curr->data != target) {
         curr = curr->next;
@@ -83,9 +81,18 @@ public:
 
       if(curr == nullptr) {
         cout << "Target Title " << target << " not found.\n";
+        return;
       }
 
       Node* node = new Node(val);
+      
+      node->next = curr->next;
+      if(curr->next != nullptr) {
+        curr->next->prev = node;
+      } else {
+        tail = node;
+      }
+      
       curr->next = node;
       node->prev = curr;
 
@@ -116,7 +123,7 @@ public:
         cout << "The list is empty\n";
         return;
       }
-      Node*temp = tail;
+      Node* temp = tail;
       tail = tail->prev;
       if(tail != nullptr) {
         tail->next = nullptr;
@@ -128,10 +135,17 @@ public:
       count--;
       displayList();
     }
-
 };
 
 int main() {
+  DLL playlist;
+  playlist.insertFirst("Song A");
+  playlist.insertLast("Song B");
+  playlist.insertLast("Song C");
+  playlist.insertLast("Song D");
+  playlist.insertLast("Song E");
+  playlist.insert("Song C", "Song F");
 
+  playlist.deleteFirst();
   return 0;
 }
